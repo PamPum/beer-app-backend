@@ -95,10 +95,11 @@ export const login = async (req, res) => {
     const token = generateJWT(findUser.id);
 
     res.cookie("access_token", token, {
-      expires: new Date(Date.now() + 24 * 3600000),
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      partitioned: true,
       sameSite: "none",
       secure: true,
-      httpOnly: true,
     });
 
     res.status(200).json({
@@ -116,10 +117,10 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     res.clearCookie("access_token", {
-      expires: new Date(Date.now() - 1),
+      httpOnly: true,
+      partitioned: true,
       sameSite: "none",
       secure: true,
-      httpOnly: true,
     });
 
     res.status(200).json({ message: "Sesión cerrada correctamente" });
